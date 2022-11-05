@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
+import router from './routes/users.route.js';
 
 // config dotenv
 dotenv.config();
@@ -16,6 +17,7 @@ const DB_URL = process.env.DATABASE_URL;
 app.use(cors()); 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(router);
 
 // connect database and implementation server listenerr
 mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
