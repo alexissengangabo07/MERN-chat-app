@@ -16,7 +16,7 @@ const DB_URL = process.env.DATABASE_URL;
 // middlewares
 app.use(cors()); 
 app.use(express.json());
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({extended: false}));
 app.use(router);
 
 // connect database and implementation server listenerr
