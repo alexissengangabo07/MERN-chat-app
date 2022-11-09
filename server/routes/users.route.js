@@ -7,7 +7,8 @@ import {
 } from '../controllers/user.controller.js'
 const router = express.Router();
 
-router.post('/register', insertUserController)
+router
+    .post('/register', insertUserController)
     .get('/users', getUsersController)
     .get('/user/:id', getSingleUserController)
     .put('/user/:id', updateUserController);
