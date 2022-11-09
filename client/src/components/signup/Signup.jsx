@@ -36,7 +36,7 @@ const Signup = () => {
           </div>
           <div className='form-group'>
             <label for="password_confirm">Confirm Password</label>
-            <input type="text" placeholder='Retype your password' className='input-field' id='password-confirm' name='password-confirm' required />
+            <input type="password" placeholder='Retype your password' className='input-field' id='password-confirm' name='password-confirm' required />
           </div>
           <div className='form-group'>
             <input type="submit" value="Signup" className='btn-signup' id='btn-signup' name='btn-signup' required />
