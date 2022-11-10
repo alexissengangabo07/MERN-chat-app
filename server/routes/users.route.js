@@ -13,5 +13,5 @@ router
     .get('/users', getUsersController)
     .get('/user/:id', getSingleUserController)
     .put('/user/:id', updateUserController);
-
+    
 export default router;

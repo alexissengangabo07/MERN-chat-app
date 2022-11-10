@@ -6,7 +6,17 @@ export const fetchUsers = createAsyncThunk('users/fetchUserData', async () => {
     return data;
 });
 
-const userSlice = createSlice({
+export const saveUser = createAsyncThunk('users/saveUser', async (newUser, { rejectWithValue }) => {
+    try {
+        const { data } = await api.createUser(newUser);
+        return data;
+    } catch (error) {
+        // return (rejectWithValue(error.response.message));
+        return error.response.data.message;
+    }
+});
+
+const getUserSlice = createSlice({
     name: 'users',
     initialState: {
         data: [],
@@ -24,27 +34,21 @@ const userSlice = createSlice({
         builder.addCase(fetchUsers.rejected, (state, action) => {
             state.isLoading = false;
         })
+        builder.addCase(saveUser.pending, state => {
+            state.isLoading = true;
+        });
+        builder.addCase(saveUser.fulfilled, (state, { payload }) => {
+            state.isLoading = false;
+            // state.data = payload;
+            console.log(payload);
+            // console.log(state.users);
+        });
+        builder.addCase(saveUser.rejected, (state, action) => {
+            state.isLoading = false;
+        });
     }
-    //  {
-    //     [fetchUsers.pending]: (state) => {
-    //         state.isLoading = true;
-    //     },
-    //     [fetchUsers.fulfilled]: (state, action) => {
-    //         state.userInfos = action.payload;
-    //     },
-    //     [fetchUsers.rejected]: (state) => {
-    //         state.isLoading = false;
-    //     }
-    // },
-    // reducers: {
-    //     fetchUserData: (state, { payload }) => {
-    //         state.userInfos = payload;
-    //     },
-    //     addUser: (state, { payload }) => {
-    //         state.userInfos.push(payload);
-    //     }
-    // }
 });
 
-export const { fetchUserData } = userSlice.actions;
-export default userSlice.reducer;
+
+// export const { fetchUserData } = getUserSlice.actions;
+export default getUserSlice.reducer;

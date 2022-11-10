@@ -26,8 +26,9 @@ const Home = () => {
             <h4>User : </h4>
             <div>
               <ul>
+                <li>okoko</li>
                 {users.data.map((user, index) => (
-                  <li key={index}>{ user.username }</li>
+                  <li key={index}>{user.username}</li>
                 ))}
               </ul>
             </div>
@@ -38,4 +39,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home;
