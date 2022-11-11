@@ -26,9 +26,27 @@ export const getMessagesController = async (req, res) => {
 
 
 export const updateMessageController = async (req, res) => {
+    try {
+        const { user } = req.params;
 
+        let updatedMessage = await messagesModel.findOneAndUpdate(user, req.body, { new: true });
+        res.status(200).json(updatedMessage);
+    } catch (err) {
+        res.status(500).json({ message: err })
+    }
 };
 
 export const deleteMessageController = async (req, res) => {
-
+    let { id } = req.params;
+    try {
+        if (id) {
+            let deleteMessage = await messagesModel.findOneAndDelete({ _id: mongoose.Types.ObjectId(id) });
+            let messages = await deleteMessage.save();
+            res.status(200).json(messages);
+        } else {
+            res.status(404).json({ message: 'Message non trouvee' });
+        }
+    } catch (err) {
+        res.status(500).json({ message: err + 'erreur' });
+    }
 };

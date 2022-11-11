@@ -10,7 +10,7 @@ const messageRouter = Router();
 
 messageRouter.get('/:user', getMessagesController)
     .post('/', addMessageController)
-    .put('/', updateMessageController)
+    .put('/:user', updateMessageController)
     .delete('/:id', deleteMessageController)
 
 export default messageRouter;
