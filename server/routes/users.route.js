@@ -1,17 +1,17 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import {
     insertUserController,
     getUsersController,
     getSingleUserController,
     updateUserController
-} from '../controllers/user.controller.js'
+} from '../controllers/users.controller.js'
 
-const router = Router();
+const userRouter = Router();
 
-router
-    .post('/register', insertUserController)
-    .get('/users', getUsersController)
-    .get('/user/:id', getSingleUserController)
-    .put('/user/:id', updateUserController);
-    
-export default router;
+userRouter
+    .post('/', insertUserController)
+    .get('/all', getUsersController)
+    .get('/:id', getSingleUserController)
+    .put('/:id', updateUserController);
+
+export default userRouter;

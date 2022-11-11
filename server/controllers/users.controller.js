@@ -1,4 +1,4 @@
-import userModel from "../models/user.model.js";
+import userModel from "../models/users.model.js";
 
 export const insertUserController = async (req, res) => {
     const userInfos = req.body;

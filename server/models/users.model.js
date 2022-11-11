@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
     },
     profile_picture: {
         type: String,
-        default: 'default_avatar.png',
+        default: 'default_avatar.png'
     },
     password: {
         type: String,
@@ -26,6 +26,18 @@ const userSchema = mongoose.Schema({
     }
 }, {
     timestamps: true
+});
+
+userSchema.virtual('message_exp', {
+    ref: 'messages',
+    localField: '_id',
+    foreignField: 'expediteur'
+});
+
+userSchema.virtual('message_dest', {
+    ref: 'messages',
+    localField: '_id',
+    foreignField: 'destinateur'
 });
 
 const userModel = mongoose.model('users', userSchema);

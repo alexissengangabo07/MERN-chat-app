@@ -31,7 +31,7 @@ const Login = () => {
             <input type="password" placeholder='Enter your password' className='input-field' id='password' name='password' required />
           </div>
           <div className='form-group'>
-            <input type="submit" value="Signup" className='btn-signup' id='btn-signup' name='btn-signup' required />
+            <input type="submit" value="Login" className='btn-signup' id='btn-signup' name='btn-signup' required />
           </div>
         </form>
         <div>
