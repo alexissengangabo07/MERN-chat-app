@@ -1,3 +1,4 @@
+import passport from 'passport';
 import userModel from "../models/users.model.js";
 
 export const insertUserController = async (req, res) => {
@@ -10,6 +11,18 @@ export const insertUserController = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+}
+
+export const loginUserController = () => {
+    passport.authenticate('local', {
+        failureRedirect: '/login',
+        successRedirect: '/chat'
+    });
+}
+
+export const logOutController = (req, res) => {
+    req.logout();
+    res.redirect('/login');
 }
 
 export const getUsersController = async (req, res) => {
@@ -34,8 +47,8 @@ export const getSingleUserController = async (req, res) => {
 export const updateUserController = async (req, res) => {
     try {
         const { id } = req.params;
-        
-        let updatedUser = await userModel.findOneAndUpdate(id, req.body, {new: true});
+
+        let updatedUser = await userModel.findOneAndUpdate(id, req.body, { new: true });
         res.status(200).json(updatedUser);
     } catch (err) {
         res.status(500).json({ message: err })
