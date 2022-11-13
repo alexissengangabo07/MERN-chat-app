@@ -13,11 +13,12 @@ export const insertUserController = async (req, res) => {
     }
 }
 
-export const loginUserController = () => {
-    passport.authenticate('local', {
-        failureRedirect: '/login',
-        successRedirect: '/chat'
-    });
+export const loginUserController = (req, res) => {
+    // passport.authenticate('local', {
+    //     failureRedirect: '/login',
+    //     successRedirect: '/chat'
+    // });
+    res.status(200).json({message: 'Welcome'});
 }
 
 export const logOutController = (req, res) => {
