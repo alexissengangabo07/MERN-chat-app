@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './style.css';
+import { userAuthentication } from '../../feature/users.slice';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const emailField = useRef(null);
+  const passwordField = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const email = emailField.current.value;
+    const password = passwordField.current.value;
+
+    dispatch(userAuthentication({email, password}));
+  }
   return (
     <div className='container'>
       <div className='left-side'>
@@ -21,14 +34,14 @@ const Login = () => {
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo nam architecto est facere earum vero, autem suscipit illo nesciunt inventore aliquam praesentium impedit molestiae officia quaerat modi maxime soluta at?
           </p>
         </div>
-        <form autoComplete='off'>
+        <form autoComplete='off' onSubmit={e => handleSubmit(e)}>
           <div className='form-group'>
-            <label for="email">Email or Username</label>
-            <input type="email" placeholder='Enter your email or username' className='input-field' id='email' name='email' required />
+            <label htmlFor="email">Email or Username</label>
+            <input type="text" ref={emailField} placeholder='Enter your email or username' className='input-field' id='email' name='email' />
           </div>
           <div className='form-group'>
-            <label for="password">Password</label>
-            <input type="password" placeholder='Enter your password' className='input-field' id='password' name='password' required />
+            <label htmlFor="password">Password</label>
+            <input type="password" ref={passwordField} placeholder='Enter your password' className='input-field' id='password' name='password' autoComplete='off' required />
           </div>
           <div className='form-group'>
             <input type="submit" value="Login" className='btn-signup' id='btn-signup' name='btn-signup' required />

@@ -3,7 +3,22 @@ import './style.css';
 
 const Loader = () => {
   return (
-    <div className='loader-container'>Loading</div>
+    <div className='loader-container'>
+      <div className="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
   )
 }
 

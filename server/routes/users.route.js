@@ -1,20 +1,32 @@
+import passport from 'passport';
 import { Router } from 'express';
 import {
     insertUserController,
-    loginUserController,
     getUsersController,
     getSingleUserController,
     updateUserController,
     logOutController
 } from '../controllers/users.controller.js';
-import { isAuthenticated } from '../config/passport.config.js';
 
 const userRouter = Router();
 
 userRouter
     .post('/register', insertUserController)
-    .post('/login', loginUserController)
-    .get('/', logOutController)
+    .post('/login', (req, res, next) => {
+        passport.authenticate('local', (err, user, info) => {
+            console.log(user);
+            if (err) throw err;
+            if (!user) res.status(404).json({ message: 'User not found' });
+            else {
+                req.logIn(user, err => {
+                    if (err) throw err;
+                    res.status(200).json({ message: 'Success' });
+                })
+                // res.status(200).json({message: user});
+            }
+        })(req, res, next);
+    })
+    .get('/logout', logOutController)
     .get('/all', getUsersController)
     .get('/:id', getSingleUserController)
     .put('/:id', updateUserController);

@@ -1,0 +1,55 @@
+.home-container {
+    animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    background-color: lightgray;
+    height: 100vh;
+    max-height: 100vh;
+    padding: 20px;
+    display: flex;
+    position: relative;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.connected-user-img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+
+.sidebar {
+    background-color: #8300cb;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.sidebar>div {
+    padding: 30px;
+}
+
+.message-icon {
+    margin-top: 50px;
+    width: 100%;
+    border-right: 4px solid yellow;
+}
+
+.logout-icon {
+    position: absolute;
+    bottom: 2%;
+}
+
+.center-column {
+    background-color: #fff;
+}

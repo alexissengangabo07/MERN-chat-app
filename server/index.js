@@ -25,15 +25,15 @@ app.use(express.urlencoded({ extended: true }));
 //Passport and session middlewares
 app.use(session({
     secret: "secret",
-    resave: false,
+    resave: true,
     saveUninitialized: true,
 }))
 app.use(passport.initialize());
 app.use(passport.session());
 
 // routes  middlewares
-app.use('/user', userRouter);
-app.use('/message', messageRouter);
+app.use('/users', userRouter);
+app.use('/messages', messageRouter);
 
 passportInitialization(passport);
 
