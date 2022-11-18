@@ -1,24 +1,48 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { saveUser } from '../../feature/users.slice';
+import { ToastNotifyError, ToastNotifySuccess } from './toastMessages';
 import './style.css';
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const usernameField = useRef(null);
+  const emailField = useRef('');
+  const passwordField = useRef('');
+  const confirmPasswordField = useRef('');
 
   const handleSubmit = () => {
-    dispatch(saveUser({ username, email, password }));
+    // dispatch(saveUser({ username, email, password }));
+    let username = usernameField.current.value.trim();
+    let email = emailField.current.value.trim();
+    let password = passwordField.current.value.trim();
+    let passwordConfirm = confirmPasswordField.current.value.trim();
+
+    let usernameTest = username !== '' && username.length > 2 && (/^([a-zA-Zéàèçïô]{3,20})$/).test(username);
+    let emailTest = email !== '' && (/^\w+([[\.-]?\w+]{3,15})*@\w+([[\.-]?\w+]{2,10})*(\.\w{2,3})+$/.test(email));
+
+    if (!usernameTest) {
+      ToastNotifyError('Entrer un username correct !');
+    }
+    if (!emailTest) {
+      ToastNotifyError('Entrer une adresse mail correct !');
+    }
+    if (password !== passwordConfirm) {
+      ToastNotifyError('Le mot de passe et la confirmation doivent etre similaire !');
+    }
+    else {
+      ToastNotifySuccess('Vous avez été enregitré qvec succès !');
+      // dispatch()
+    }
   }
 
   return (
     <div className='container'>
       <div className='left-side'>
         <div className='text-container'>
+          <ToastContainer />
           <h2 className='header'>Real Time Chat App</h2>
           <p>
             Welcome, you want to communicate with other people around the world, Signup to have an access to our platform
@@ -36,22 +60,22 @@ const Signup = () => {
         <form autoComplete='off' onSubmit={e => { e.preventDefault(); handleSubmit() }}>
           <div className='form-group'>
             <label htmlFor="username">Username</label>
-            <input type="text" onInput={e => setUsername(e.target.value)} placeholder='Enter your username' className='input-field' id='username' name='username' required />
+            <input type="text" ref={usernameField} placeholder='Enter your username' className='input-field' id='username' name='username' />
           </div>
           <div className='form-group'>
             <label htmlFor="email">Email</label>
-            <input type="email" onInput={e => setEmail(e.target.value)} placeholder='Enter your email' className='input-field' id='email' name='email' required />
+            <input type="email" ref={emailField} placeholder='Enter your email' className='input-field' id='email' name='email' autoComplete='off' />
           </div>
           <div className='form-group'>
             <label htmlFor="password">New Password</label>
-            <input type="password" onInput={e => setPassword(e.target.value)} placeholder='Enter new password' className='input-field' id='password' name='password' autoComplete='off' required />
+            <input type="password" ref={passwordField} placeholder='Enter new password' className='input-field' id='password' name='password' autoComplete='off' />
           </div>
           <div className='form-group'>
             <label htmlFor="password_confirm">Confirm Password</label>
-            <input type="password" onInput={e => setConfirmPassword(e.target.value)} placeholder='Retype your password' className='input-field' id='password-confirm' name='password-confirm' autoComplete="off" required />
+            <input type="password" ref={confirmPasswordField} placeholder='Retype your password' className='input-field' id='password-confirm' name='password-confirm' autoComplete="off" />
           </div>
           <div className='form-group'>
-            <input type="submit" value="Signup" className='btn-signup' id='btn-signup' name='btn-signup' required />
+            <input type="submit" value="Signup" className='btn-signup' id='btn-signup' name='btn-signup' />
           </div>
         </form>
         <div>
