@@ -33,8 +33,8 @@ const Signup = () => {
       ToastNotifyError('Le mot de passe et la confirmation doivent etre similaire !');
     }
     else {
-      ToastNotifySuccess('Vous avez été enregitré qvec succès !');
-      // dispatch()
+      ToastNotifySuccess('Vous avez été enregitré avec succès !');
+      dispatch(saveUser({ username, email, password: passwordConfirm }));
     }
   }
 

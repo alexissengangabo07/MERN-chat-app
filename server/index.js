@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import passport from 'passport';
 import session from 'express-session';
-import bcrypt from 'bcrypt';
+import morgan from 'morgan';
 import userRouter from './routes/users.route.js';
 import messageRouter from './routes/messages.route.js';
 import passportInitialization from './config/passport.config.js';
@@ -17,11 +17,15 @@ const app = express();
 const PORT = process.env.PORT;
 const DB_URL = process.env.DATABASE_URL;
 
+morgan.token('id', function getId(req) {
+    return req.id
+});
+
 // middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(morgan(':method :url :status :response-time ms'));
 //Passport and session middlewares
 app.use(session({
     secret: "secret",

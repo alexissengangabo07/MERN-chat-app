@@ -1,9 +1,16 @@
-import passport from 'passport';
+// import passport from 'passport';
+import bcrypt from 'bcrypt';
 import userModel from "../models/users.model.js";
 
 export const insertUserController = async (req, res) => {
-    const userInfos = req.body;
-    const newUser = new userModel(userInfos);
+    const { username, email, password } = req.body;
+    console.log('username = ',username);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new userModel({
+        username,
+        email,
+        password: hashedPassword
+    });
 
     try {
         await newUser.save();
@@ -18,7 +25,7 @@ export const loginUserController = (req, res) => {
     //     failureRedirect: '/login',
     //     successRedirect: '/chat'
     // });
-    res.status(200).json({message: 'Welcome'});
+    res.status(200).json({ message: 'Welcome' });
 }
 
 export const logOutController = (req, res) => {
