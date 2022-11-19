@@ -9,8 +9,7 @@ import { GoPrimitiveDot } from 'react-icons/go';
 import { fetchUsers } from '../../feature/users.slice';
 import Loader from '../loader/Loader';
 import Image from './nba yb.jpeg';
-
-
+import { ToastContainer, toast } from 'react-toastify';
 import './style.css';
 
 const Home = () => {
@@ -19,7 +18,10 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchUsers());
+    toast("Wow so easy!");
   }, []);
+
+  const notify = () => toast("Wow so easy!");
 
   return (
     <>
@@ -29,6 +31,8 @@ const Home = () => {
       ) :
         (
           <main className='home-container'>
+            <ToastContainer />
+            {/* <button onClick={notify}>Notify!</button> */}
             <aside className='sidebar'>
               <div className='connected-user-img-container'>
                 <img alt="user-img" src={Image} className='connected-user-img' />

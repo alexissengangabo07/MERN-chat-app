@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from './components/home/Home';
 import Login from './components/login/Login';
 import Signup from './components/signup/Signup';

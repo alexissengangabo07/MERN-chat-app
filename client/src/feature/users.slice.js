@@ -6,8 +6,9 @@ export const fetchUsers = createAsyncThunk('users/fetchUserData', async () => {
     return data;
 });
 
-export const saveUser = createAsyncThunk('users/saveUser', async (newUser, { rejectWithValue }) => {
+export const saveUser = createAsyncThunk('users/register', async (newUser, { rejectWithValue }) => {
     try {
+        console.log(newUser);
         const { data } = await api.createUser(newUser);
         console.log(data);
         return data;
