@@ -35,10 +35,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// routes  middlewares
-/**
-        * @ Docs routes params
- * */
+// routes
 app.use('/users', userRouter);
 app.use('/messages', messageRouter);
 

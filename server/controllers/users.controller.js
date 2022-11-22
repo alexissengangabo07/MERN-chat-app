@@ -1,36 +1,48 @@
-// import passport from 'passport';
+import passport from 'passport';
 import bcrypt from 'bcrypt';
 import userModel from "../models/users.model.js";
 
 export const insertUserController = async (req, res) => {
-    const { username, email, password } = req.body;
-    console.log('username = ',username);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new userModel({
-        username,
-        email,
-        password: hashedPassword
-    });
+    userModel.findOne({ username: req.body.username }, async (err, doc) => {
+        if (err) throw err;
+        if (doc) res.send("User Already Exists");
+        if (!doc) {
+            const { username, email, password } = req.body;
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-    try {
-        await newUser.save();
-        res.status(201).json({ message: 'User inserted successfuly' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+            const newUser = new userModel({
+                username,
+                email,
+                password: hashedPassword
+            });
+            await newUser.save();
+            res.send("User Created");
+        }
+    });
 }
 
-export const loginUserController = (req, res) => {
-    // passport.authenticate('local', {
-    //     failureRedirect: '/login',
-    //     successRedirect: '/chat'
-    // });
-    res.status(200).json({ message: 'Welcome' });
+export const userLoginController = (req, res, next) => {
+
+    passport.authenticate("local", (err, user, info) => {
+        if (err) throw err;
+        if (!user) res.send("No User Exists");
+        else {
+            req.logIn(user, (err) => {
+                if (err) throw err;
+                res.status(200).json({ message: "Successfully Authenticated" });
+            });
+        }
+    })(req, res, next);
 }
 
 export const logOutController = (req, res) => {
-    req.logout();
-    res.redirect('/login');
+    if (req.user) {
+        req.logout()
+        res.status(200).json({ msg: 'logging out' })
+    } else {
+        res.status(200).json({ msg: 'no user to log out' })
+    }
+    // res.redirect('/login');
 }
 
 export const getUsersController = async (req, res) => {
@@ -59,6 +71,15 @@ export const updateUserController = async (req, res) => {
         let updatedUser = await userModel.findOneAndUpdate(id, req.body, { new: true });
         res.status(200).json(updatedUser);
     } catch (err) {
-        res.status(500).json({ message: err })
+        res.status(500).json({ message: err });
+    }
+}
+
+export const connectedUser = async (req, res) => {
+    if (req.user) {
+        res.status(200).json({ user: req.user });
+    }
+    else {
+        res.status(200).json({ message: 'No user authentified' });
     }
 }

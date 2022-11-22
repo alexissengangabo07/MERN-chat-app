@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import EmojiPicker from 'emoji-picker-react';
+import { useNavigate } from "react-router-dom";
 import { AiFillMessage, AiOutlineSend } from 'react-icons/ai';
 import { MdLogout } from 'react-icons/md';
 import { FiSearch, FiCamera } from 'react-icons/fi';
@@ -13,19 +15,31 @@ import { ToastContainer, toast } from 'react-toastify';
 import './style.css';
 
 const Home = () => {
+  const [userData, setUserData] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const users = useSelector(store => store.usersInfos);
 
   useEffect(() => {
     dispatch(fetchUsers());
-    toast("Wow so easy!");
+    axios.get("http://localhost:5000/users/connected")
+      .then(({ data }) => {
+        if (data.user) {
+          // navigate('/login');
+          console.log('ok')
+        }
+        else {
+          // navigate('/login');
+          console.log('no connected user')
+        }
+        setUserData(data);
+        console.log(data);
+      });
   }, []);
 
-  const notify = () => toast("Wow so easy!");
 
   return (
     <>
-      {console.log(users)}
       {users?.isLoading ? (
         <Loader />
       ) :
@@ -98,6 +112,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div>
+                  {userData ? <h1>Welcome Back {userData.username}</h1> : 'null'}
                   <h3>Swathi</h3>
                   <p>Online</p>
                   {/* <div>

@@ -10,7 +10,7 @@ export const saveUser = createAsyncThunk('users/register', async (newUser, { rej
     try {
         console.log(newUser);
         const { data } = await api.createUser(newUser);
-        console.log(data);
+        // console.log(data);
         return data;
     } catch (error) {
         // return (rejectWithValue(error.response.message));
