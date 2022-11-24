@@ -1,18 +1,23 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import Home from './components/home/Home';
 import Login from './components/login/Login';
 import Signup from './components/signup/Signup';
+import './App.css';
 
 const App = () => {
   return (
-    <Routes>
-       <Route path='/' element={<Navigate to='/login' />} />
-      <Route path='/chat' element={<Home />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/signup' element={<Signup />} />
-    </Routes>
+    <main className="main-container">
+      <Routes>
+        <Route path='/' element={<Navigate to='/login' />} />
+        <Route path='/chat' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+      </Routes>
+      <ToastContainer />
+    </main>
   );
 }
 

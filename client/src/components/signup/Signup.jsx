@@ -1,17 +1,30 @@
-import React, { useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import { saveUser } from '../../feature/users.slice';
-import { ToastNotifyError, ToastNotifySuccess } from './toastMessages';
+import { useNavigate } from 'react-router-dom';
+import { reset, saveUser } from '../../feature/auth.slice';
+import { ToastNotifyError } from './toastMessages';
+import Loader from '../loader/Loader';
 import './style.css';
 
 const Signup = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const usernameField = useRef(null);
   const emailField = useRef('');
   const passwordField = useRef('');
   const confirmPasswordField = useRef('');
+  const { isError, user, isSuccess, isLoading, message } = useSelector(store => store.auth);
+
+  useEffect(() => {
+    if (isError) {
+      ToastNotifyError(message);
+    }
+    if (isSuccess || user !== null) {
+      navigate('/chat');
+    }
+    dispatch(reset());
+  }, [isError, user, isSuccess, isLoading, message, dispatch, navigate]);
 
   const handleSubmit = () => {
     // dispatch(saveUser({ username, email, password }));
@@ -32,8 +45,7 @@ const Signup = () => {
     if (password !== passwordConfirm) {
       ToastNotifyError('Le mot de passe et la confirmation doivent etre similaire !');
     }
-    else {
-      ToastNotifySuccess('Vous avez été enregitré avec succès !');
+    if (usernameTest && emailTest && password === passwordConfirm) {
       dispatch(saveUser({ username, email, password: passwordConfirm }));
     }
   }
@@ -42,7 +54,6 @@ const Signup = () => {
     <div className='container'>
       <div className='left-side'>
         <div className='text-container'>
-          <ToastContainer />
           <h2 className='header'>Real Time Chat App</h2>
           <p>
             Welcome, you want to communicate with other people around the world, Signup to have an access to our platform
@@ -64,7 +75,7 @@ const Signup = () => {
           </div>
           <div className='form-group'>
             <label htmlFor="email">Email</label>
-            <input type="email" ref={emailField} placeholder='Enter your email' className='input-field' id='email' name='email' autoComplete='off' />
+            <input type="text" ref={emailField} placeholder='Enter your email' className='input-field' id='email' name='email' autoComplete='off' />
           </div>
           <div className='form-group'>
             <label htmlFor="password">New Password</label>

@@ -1,36 +1,86 @@
-// import passport from 'passport';
 import bcrypt from 'bcrypt';
+import { json } from 'express';
+import jwt from 'jsonwebtoken';
 import userModel from "../models/users.model.js";
 
+/*
+    @desc Create a new user
+    @route POST /users/register
+    @access public
+*/
 export const insertUserController = async (req, res) => {
-    const { username, email, password } = req.body;
-    console.log('username = ',username);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new userModel({
-        username,
-        email,
-        password: hashedPassword
-    });
+    userModel.findOne({ username: req.body.username }, async (err, doc) => {
+        if (err) throw err;
+        if (doc) res.status(403).json({ message: "User Already Exists" });
+        if (!doc) {
+            const { username, email, password } = req.body;
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-    try {
-        await newUser.save();
-        res.status(201).json({ message: 'User inserted successfuly' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+            const user = await userModel.create({
+                username,
+                email,
+                password: hashedPassword
+            });
+
+            if (user) {
+                res.status(201).json({
+                    _id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    token: generateToken(user._id)
+                });
+            }
+            else {
+                res.status(400).json({ message: 'Invalid user data' });
+            }
+        }
+    });
+}
+
+/*
+    @desc Create a new user
+    @route POST /users/login
+    @access public
+*/
+export const userLoginController = async (req, res) => {
+    const { username, password } = req.body;
+    const user = await userModel.findOne({ username });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+        res.status(201).json({
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            token: generateToken(user._id)
+        });
+    }
+    else {
+        res.status(404).json({ message: null })
     }
 }
 
-export const loginUserController = (req, res) => {
-    // passport.authenticate('local', {
-    //     failureRedirect: '/login',
-    //     successRedirect: '/chat'
-    // });
-    res.status(200).json({ message: 'Welcome' });
+/*
+    @desc Generate a Json Web Token
+*/
+export const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d'
+    });
 }
 
+/*
+    @desc Create a new user
+    @route POST /users/register
+    @access Private
+*/
 export const logOutController = (req, res) => {
-    req.logout();
-    res.redirect('/login');
+    if (req.user) {
+        req.logout()
+        res.status(200).json({ msg: 'logging out' })
+    } else {
+        res.status(200).json({ msg: 'no user to log out' })
+    }
+    // res.redirect('/login');
 }
 
 export const getUsersController = async (req, res) => {
@@ -59,6 +109,15 @@ export const updateUserController = async (req, res) => {
         let updatedUser = await userModel.findOneAndUpdate(id, req.body, { new: true });
         res.status(200).json(updatedUser);
     } catch (err) {
-        res.status(500).json({ message: err })
+        res.status(500).json({ message: err });
     }
+}
+
+export const connectedUser = async (req, res) => {
+    const { _id, username, email } = await userModel.findById(req.user.id);
+    res.status(200).json({
+        id: _id,
+        email: email,
+        username: username
+    });
 }

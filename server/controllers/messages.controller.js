@@ -21,9 +21,7 @@ export const getMessagesController = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-};
-
-
+}
 
 export const updateMessageController = async (req, res) => {
     try {

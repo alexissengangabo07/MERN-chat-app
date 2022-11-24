@@ -262,3 +262,11 @@
     color: #9b9797;
     font-size: 12px;
 }
+
+.logout-icon:hover {
+    cursor: pointer;
+}
+
+.logout-icon:hover > .inner-logout-icon {
+        color: yellow !important;
+}
