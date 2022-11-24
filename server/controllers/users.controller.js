@@ -1,40 +1,78 @@
-import passport from 'passport';
 import bcrypt from 'bcrypt';
+import { json } from 'express';
+import jwt from 'jsonwebtoken';
 import userModel from "../models/users.model.js";
 
+/*
+    @desc Create a new user
+    @route POST /users/register
+    @access public
+*/
 export const insertUserController = async (req, res) => {
     userModel.findOne({ username: req.body.username }, async (err, doc) => {
         if (err) throw err;
-        if (doc) res.send("User Already Exists");
+        if (doc) res.status(403).json({ message: "User Already Exists" });
         if (!doc) {
             const { username, email, password } = req.body;
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const newUser = new userModel({
+            const user = await userModel.create({
                 username,
                 email,
                 password: hashedPassword
             });
-            await newUser.save();
-            res.send("User Created");
+
+            if (user) {
+                res.status(201).json({
+                    _id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    token: generateToken(user._id)
+                });
+            }
+            else {
+                res.status(400).json({ message: 'Invalid user data' });
+            }
         }
     });
 }
 
-export const userLoginController = (req, res, next) => {
+/*
+    @desc Create a new user
+    @route POST /users/login
+    @access public
+*/
+export const userLoginController = async (req, res) => {
+    const { username, password } = req.body;
+    const user = await userModel.findOne({ username });
 
-    passport.authenticate("local", (err, user, info) => {
-        if (err) throw err;
-        if (!user) res.send("No User Exists");
-        else {
-            req.logIn(user, (err) => {
-                if (err) throw err;
-                res.status(200).json({ message: "Successfully Authenticated" });
-            });
-        }
-    })(req, res, next);
+    if (user && (await bcrypt.compare(password, user.password))) {
+        res.status(201).json({
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            token: generateToken(user._id)
+        });
+    }
+    else {
+        res.status(404).json({ message: null })
+    }
 }
 
+/*
+    @desc Generate a Json Web Token
+*/
+export const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d'
+    });
+}
+
+/*
+    @desc Create a new user
+    @route POST /users/register
+    @access Private
+*/
 export const logOutController = (req, res) => {
     if (req.user) {
         req.logout()
@@ -76,10 +114,10 @@ export const updateUserController = async (req, res) => {
 }
 
 export const connectedUser = async (req, res) => {
-    if (req.user) {
-        res.status(200).json({ user: req.user });
-    }
-    else {
-        res.status(200).json({ message: 'No user authentified' });
-    }
+    const { _id, username, email } = await userModel.findById(req.user.id);
+    res.status(200).json({
+        id: _id,
+        email: email,
+        username: username
+    });
 }

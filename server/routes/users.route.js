@@ -8,15 +8,16 @@ import {
     connectedUser,
     userLoginController
 } from '../controllers/users.controller.js';
+import protect from '../middlewares/auth.middleware.js';
 
 const userRouter = Router();
 
 userRouter
     .post('/register', insertUserController)
     .post('/login', userLoginController)
-    .get('/connected', connectedUser)
+    .get('/connected', protect, connectedUser)
     .get('/logout', logOutController)
-    .get('/all', getUsersController)
+    .get('/all', protect, getUsersController)
     .get('/:id', getSingleUserController)
     .put('/:id', updateUserController);
 

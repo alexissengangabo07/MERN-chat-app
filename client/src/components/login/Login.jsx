@@ -1,21 +1,37 @@
-import React, { useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { reset, logIn } from '../../feature/auth.slice';
+import { ToastNotifyError } from '../signup/toastMessages';
 import './style.css';
-import { userAuthentication } from '../../feature/users.slice';
 
 const Login = () => {
   const dispatch = useDispatch();
   const emailField = useRef(null);
   const passwordField = useRef(null);
 
+  const { isError, user, isSuccess, isLoading, message } = useSelector(store => store.auth);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isError) {
+      ToastNotifyError(message);
+    }
+    if (isSuccess || user !== null) {
+      navigate('/chat');
+    }
+    dispatch(reset());
+  }, [isError, user, isSuccess, isLoading, message, dispatch, navigate]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const email = emailField.current.value;
-    const password = passwordField.current.value;
+    const email = emailField.current.value.trim();
+    const password = passwordField.current.value.trim();
 
-    dispatch(userAuthentication({email, password}));
+    dispatch(logIn({ username: email, password }));
   }
+
   return (
     <div className='container'>
       <div className='left-side'>

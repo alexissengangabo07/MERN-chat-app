@@ -11,6 +11,6 @@ const messageRouter = Router();
 messageRouter.get('/:user', getMessagesController)
     .post('/', addMessageController)
     .put('/:user', updateMessageController)
-    .delete('/:id', deleteMessageController)
+    .delete('/:id', deleteMessageController);
 
 export default messageRouter;
