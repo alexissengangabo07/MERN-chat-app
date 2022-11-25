@@ -27,6 +27,7 @@ export const insertUserController = async (req, res) => {
                     _id: user.id,
                     username: user.username,
                     email: user.email,
+                    profilePicture: user.profile_picture,
                     token: generateToken(user._id)
                 });
             }
@@ -51,6 +52,7 @@ export const userLoginController = async (req, res) => {
             id: user._id,
             email: user.email,
             username: user.username,
+            profilePicture: user.profile_picture,
             token: generateToken(user._id)
         });
     }

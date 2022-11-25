@@ -1,36 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { AiFillMessage, AiOutlineSend } from 'react-icons/ai';
 import { MdLogout } from 'react-icons/md';
 import { FiSearch, FiCamera } from 'react-icons/fi';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { GoPrimitiveDot } from 'react-icons/go';
-import Loader from '../loader/Loader';
-import { logOut, reset, authSlice } from '../../feature/auth.slice';
-import Image from './nba yb.jpeg';
+import { logOut, reset } from '../../feature/auth.slice';
+import { fetchUsers } from '../../feature/users.slice';
+import Image from './default_avatar.jpg';
 import './style.css';
+import Loader from '../loader/Loader';
 
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { user, isError } = useSelector(store => store.auth);
+  const users = useSelector(store => store.usersInfos);
 
   useEffect(() => {
-    // dispatch(fetchUsers());
-    console.log(user, isError)
+    dispatch(fetchUsers(user.token));
     if (user === null) {
       navigate('/login');
     }
-  }, [user, navigate]);
+  }, []);
 
   const onLogOut = () => {
     dispatch(logOut());
     dispatch(reset());
   }
 
+  if (users.isLoading) {
+    return (
+      <Loader />
+    )
+  }
 
   return (
     <>
@@ -58,37 +63,21 @@ const Home = () => {
             <input type="text" className='search-box' placeholder='Search' />
           </div>
           <div className='recent-list-container'>
-            <div>
-              <h4>Recent</h4>
+            <div className='fixed-title'>
+              <h4>Recents</h4>
             </div>
             <div className='user-list'>
-              <div className='user-infos'>
-                <div>
-                  <img alt="user-img" src={Image} className='user-list-img' />
+              {users.data.map((data, index) => (
+                <div className='user-infos' key={index}>
+                  <div>
+                    <img alt="user-img" src={Image} className='user-list-img' />
+                  </div>
+                  <div>
+                    <h4>{data.username}</h4>
+                    <p className='message-overview'>Dinner ?</p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Ragnar</h4>
-                  <p className='message-overview'>Dinner ?</p>
-                </div>
-              </div>
-              <div className='user-infos'>
-                <div>
-                  <img alt="user-img" src={Image} className='user-list-img' />
-                </div>
-                <div>
-                  <h4>Ragnar</h4>
-                  <p className='message-overview'>Dinner ?</p>
-                </div>
-              </div>
-              <div className='user-infos'>
-                <div>
-                  <img alt="user-img" src={Image} className='user-list-img' />
-                </div>
-                <div>
-                  <h4>Ragnar</h4>
-                  <p className='message-overview'>Dinner ?</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </article>
