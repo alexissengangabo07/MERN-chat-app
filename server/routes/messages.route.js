@@ -8,7 +8,7 @@ import {
 
 const messageRouter = Router();
 
-messageRouter.get('/:user', getMessagesController)
+messageRouter.get('/', getMessagesController)
     .post('/', addMessageController)
     .put('/:user', updateMessageController)
     .delete('/:id', deleteMessageController);
