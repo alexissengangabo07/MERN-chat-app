@@ -8,7 +8,11 @@ export const fetchMessages = (expediteur, destinateur) => axios.get(url, {
     }
 });
 
-
+export const sendMessage = (expediteur, destinateur, messageContent) => axios.post(url, {
+    expediteur,
+    destinateur,
+    messageContent
+});
 
 
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import moment from 'moment';
 import { AiFillMessage, AiOutlineSend } from 'react-icons/ai';
 import { MdLogout } from 'react-icons/md';
 import { FiSearch, FiCamera } from 'react-icons/fi';
@@ -8,7 +9,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { GoPrimitiveDot } from 'react-icons/go';
 import { logOut, reset } from '../../feature/auth.slice';
 import { fetchUsers } from '../../feature/users.slice';
-import { fetchUsersMessages } from '../../feature/messages.slice';
+import { fetchUsersMessages, sendMessage } from '../../feature/messages.slice';
 import Image from './default_avatar.jpg';
 import './style.css';
 import Loader from '../loader/Loader';
@@ -44,12 +45,22 @@ const Chat = () => {
       destinateurUsername
     });
     dispatch(fetchUsersMessages({ expediteur: user.id, destinateurId, destinateur: destinateurId }));
-    // dispatch()
+    // resetInput();
   }
 
-  const sendMessage = (exped, dest) => {
+  const resetInput = () => {
+    messageInputField.current.value = null;
+  }
+
+  const envoieMessage = (exped, dest) => {
     let messageContent = messageInputField.current.value;
-    console.log(exped, dest, messageContent);
+
+    dispatch(sendMessage({
+      expediteur: exped,
+      destinateur: dest,
+      messageContent
+    }));
+    resetInput();
   }
 
   const onLogOut = () => {
@@ -93,17 +104,22 @@ const Chat = () => {
               <h4>Recents</h4>
             </div>
             <div className='user-list'>
-              {users.data.map((data, index) => (
-                <div className='user-infos' key={index} onClick={() => selectUser(data._id, data.username)}>
-                  <div>
-                    <img alt="user-img" src={Image} className='user-list-img' />
-                  </div>
-                  <div>
-                    <h4>{data.username}</h4>
-                    <p className='message-overview'>Dinner ?</p>
-                  </div>
-                </div>
-              ))}
+              {users.data.map((data, index) => {
+                if (data._id !== user.id) {
+                  return (
+                    <div className='user-infos' key={index} onClick={() => selectUser(data._id, data.username)}>
+                      <div>
+                        <img alt="user-img" src={Image} className='user-list-img' />
+                      </div>
+                      <div>
+                        <h4>{data.username}</h4>
+                        <p className='message-overview'>Last message...</p>
+                      </div>
+                    </div>
+                  );
+                }
+              }
+              )}
             </div>
           </div>
         </article>
@@ -138,7 +154,7 @@ const Chat = () => {
                               <div className={user.id === message?.expediteur._id ? 'message-box message-box-left' : 'message-box message-box-right'}>
                                 <p>{message?.messageContent}</p>
                               </div>
-                              <p>{message?.createdAt}</p>
+                              <p>{moment(message?.createdAt).format()}</p>
                             </div>
                           )
                         }
@@ -149,7 +165,7 @@ const Chat = () => {
               </section>
 
               <section className='chat-footer'>
-                <form className='chat-form' onSubmit={(e) => { e.preventDefault(); sendMessage(user.id, loadChat.destinateurId) }}>
+                <form className='chat-form' onSubmit={(e) => { e.preventDefault(); envoieMessage(user.id, loadChat.destinateurId) }}>
                   <textarea className='chat-textarea' ref={messageInputField}></textarea>
                   <button type='submit' className='btn-send'>< AiOutlineSend /></button>
                   <div className='camera-icon'>

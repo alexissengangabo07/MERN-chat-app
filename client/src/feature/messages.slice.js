@@ -3,8 +3,8 @@ import * as api from '../api/message';
 
 export const fetchUsersMessages = createAsyncThunk('messages/fetchMessages', async (users) => {
     const { expediteur, destinateur } = users;
-    try {        
-        const {data} = await api.fetchMessages(expediteur, destinateur);
+    try {
+        const { data } = await api.fetchMessages(expediteur, destinateur);
         return data;
     } catch (error) {
         console.log(error);
@@ -13,11 +13,12 @@ export const fetchUsersMessages = createAsyncThunk('messages/fetchMessages', asy
 
 export const sendMessage = createAsyncThunk('messages/sendMessage', async (messageInfos) => {
     const { expediteur, destinateur, messageContent } = messageInfos;
-    try {        
-        const {data} = await api.fetchMessages(expediteur, destinateur, messageContent);
+
+    try {
+        const { data } = await api.sendMessage(expediteur, destinateur, messageContent);
         return data;
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
     }
 });
 

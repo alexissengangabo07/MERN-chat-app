@@ -17,7 +17,7 @@ export const getMessagesController = async (req, res) => {
         let messages = await messagesModel.find({
             $or: [
                 {
-                    $and: [{ expediteur}, { destinateur }]
+                    $and: [{ expediteur }, { destinateur }]
                 },
                 {
                     $and: [{ expediteur: destinateur }, { destinateur: expediteur }]
