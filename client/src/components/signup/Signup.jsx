@@ -50,6 +50,9 @@ const Signup = () => {
     }
   }
 
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <div className='container'>
       <div className='left-side'>

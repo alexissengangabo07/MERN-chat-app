@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { reset, logIn } from '../../feature/auth.slice';
+import { logIn } from '../../feature/auth.slice';
+import Loader from '../loader/Loader';
 import { ToastNotifyError } from '../signup/toastMessages';
 import './style.css';
 
@@ -21,7 +22,6 @@ const Login = () => {
     if (isSuccess || user !== null) {
       navigate('/chat');
     }
-    dispatch(reset());
   }, [isError, user, isSuccess, isLoading, message, dispatch, navigate]);
 
   const handleSubmit = (e) => {
@@ -30,6 +30,10 @@ const Login = () => {
     const password = passwordField.current.value.trim();
 
     dispatch(logIn({ username: email, password }));
+  }
+
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (

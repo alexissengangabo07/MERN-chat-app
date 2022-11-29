@@ -1,55 +1,55 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as api from '../api/user';
+import * as api from '../api/message';
 
-export const fetchUsersMessages = createAsyncThunk('users/fetchUserData', async () => {
-    const { data } = await api.fetchUsers();
-    return data;
-});
-
-export const saveMessage = createAsyncThunk('users/register', async (newUser, { rejectWithValue }) => {
+export const fetchUsersMessages = createAsyncThunk('messages/fetchMessages', async (users) => {
+    const { expediteur, destinateur } = users;
     try {
-        console.log(newUser);
-        const { data } = await api.createUser(newUser);
-        // console.log(data);
+        const { data } = await api.fetchMessages(expediteur, destinateur);
         return data;
     } catch (error) {
-        // return (rejectWithValue(error.response.message));
-        return error.response.data.message;
+        console.log(error);
+    }
+});
+
+export const sendMessage = createAsyncThunk('messages/sendMessage', async (messageInfos) => {
+    const { expediteur, destinateur, messageContent } = messageInfos;
+
+    try {
+        const { data } = await api.sendMessage(expediteur, destinateur, messageContent);
+        return data;
+    } catch (err) {
+        console.log(err);
     }
 });
 
 
 const messagesSlice = createSlice({
-    name: 'users',
+    name: 'messages',
     initialState: {
-        data: [],
-        isLoading: false,
-        userIsConnected: false
+        messagesData: [],
+        isMessageLoading: false
     },
     extraReducers: builder => {
         builder.addCase(fetchUsersMessages.pending, state => {
-            state.isLoading = true;
+            state.isMessageLoading = true;
         });
         builder.addCase(fetchUsersMessages.fulfilled, (state, action) => {
-            state.isLoading = false;
-            state.data = action.payload;
-            // console.log(state.users);
+            state.isMessageLoading = false;
+            state.messagesData = action.payload;
         });
         builder.addCase(fetchUsersMessages.rejected, (state, action) => {
-            state.isLoading = false;
+            state.isMessageLoading = false;
         });
 
-        builder.addCase(saveMessage.pending, state => {
-            state.isLoading = true;
+        builder.addCase(sendMessage.pending, state => {
+            state.isMessageLoading = true;
         });
-        builder.addCase(saveMessage.fulfilled, (state, { payload }) => {
-            state.isLoading = false;
-            // state.data = payload;
-            console.log(payload);
-            // console.log(state.users);
+        builder.addCase(sendMessage.fulfilled, (state, action) => {
+            state.isMessageLoading = false;
+            state.messagesData.push(action.payload);
         });
-        builder.addCase(saveMessage.rejected, (state, action) => {
-            state.isLoading = false;
+        builder.addCase(sendMessage.rejected, (state, action) => {
+            state.isMessageLoading = false;
         });
     }
 });

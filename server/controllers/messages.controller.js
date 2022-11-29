@@ -13,8 +13,17 @@ export const addMessageController = async (req, res) => {
 
 export const getMessagesController = async (req, res) => {
     try {
-        const { user } = req.params;
-        let messages = await messagesModel.find({ $or: [{ destinateur: user }, { expediteur: user }] })
+        const { expediteur, destinateur } = req.query;
+        let messages = await messagesModel.find({
+            $or: [
+                {
+                    $and: [{ expediteur }, { destinateur }]
+                },
+                {
+                    $and: [{ expediteur: destinateur }, { destinateur: expediteur }]
+                }
+            ]
+        })
             .populate('expediteur')
             .populate('destinateur');
         res.status(200).json(messages);

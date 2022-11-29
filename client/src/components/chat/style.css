@@ -44,7 +44,7 @@
 }
 
 .sidebar>div {
-    padding: 30px;
+    padding: 16px;
 }
 
 .message-icon {
@@ -96,9 +96,10 @@
     border-radius: 6px;
     position: relative;
     margin-top: 20px;
-    padding: 15px;
+    padding: 0 15px 10px 15px;
     box-shadow: 0px 3px 3px 0px rgb(159, 158, 158);
-    /* overflow-y: scroll; */
+    max-height: 89%;
+    overflow-y: scroll;
 }
 
 .user-list-img {
@@ -109,7 +110,7 @@
 
 .user-list>div {
     border-bottom: 1px solid rgb(191, 190, 190);
-    margin: 15px 0;
+    padding: 5px 0;
 }
 
 .user-list>div:last-child {
@@ -119,6 +120,17 @@
 .user-infos {
     display: flex;
     gap: 10px;
+    cursor: pointer;
+    padding: 5px 5px 0 5px;
+    transition: all .3s ease;
+}
+
+.user-infos:hover {
+    background-color: rgb(234, 234, 234);
+}
+
+.user-infos:active {
+    background-color: #8400cb28;
 }
 
 .message-overview {
@@ -195,6 +207,7 @@
 .chat-section {
     position: relative;
     width: 100%;
+    flex-basis: 90%;
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -269,4 +282,11 @@
 
 .logout-icon:hover > .inner-logout-icon {
         color: yellow !important;
+}
+
+.fixed-title {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 10px 0;
 }
