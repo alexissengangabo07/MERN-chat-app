@@ -22,7 +22,7 @@ const Login = () => {
     if (isSuccess || user !== null) {
       navigate('/chat');
     }
-  }, [isError, user, isSuccess, isLoading, message, dispatch, navigate]);
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();

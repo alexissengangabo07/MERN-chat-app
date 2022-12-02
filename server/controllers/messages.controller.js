@@ -5,6 +5,7 @@ export const addMessageController = async (req, res) => {
 
     try {
         const insertedMessage = await newMessage.save();
+        listSockets.forEach((socket) => socket.emit('newMessage', newMessage))
         res.status(201).json(insertedMessage);
     } catch (error) {
         res.status(500).json({ message: error.message });
