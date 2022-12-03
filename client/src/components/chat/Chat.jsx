@@ -23,7 +23,7 @@ const Chat = () => {
   const { user } = useSelector(store => store.auth);
   const users = useSelector(store => store.usersInfos);
   const { messagesData, isMessageLoading } = useSelector(store => store.messagesReducer);
-  const [socket, setSocket] = useState(io('ws://localhost:5000', { transports: ["websocket"] }));
+  const socket = useRef(io('ws://localhost:5000', { transports: ["websocket"] }));
 
   const [loadChat, setLoadChat] = useState({
     expediteur: user.id ? user.id : null,
@@ -36,17 +36,15 @@ const Chat = () => {
   const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchUsers(user.token));
     if (user === null) {
       navigate('/login');
     }
+    dispatch(fetchUsers(user.token));
   }, []);
 
   useEffect(() => {
-    socket.on('newMessage', data => {
-      console.log(data);
-    });
-  });
+    socket.current.emit('addUser', user.id);
+  }, [user]);
 
   const selectUser = (destinateurId, destinateurUsername) => {
     setLoadChat({

@@ -18,7 +18,7 @@ const DB_URL = process.env.DATABASE_URL;
 const server = createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:3000'
+        origin: '*'
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
@@ -39,16 +39,27 @@ app.use('/messages', messageRouter);
 
 let users = [{}];
 
-// Connect socket and socket manups
-io.once('connect', (socket) => {
-    console.log('Socket Connected');
+const addUser = (userId, socketId) => {
+    !users.some(usr => usr.userId === userId) &&
+        users.push({ userId, socketId });
 
-    socket.once('message', ({ message }) => {
+    console.log('Socket add user ' ,users);
+}
+
+// Connect socket and socket manups
+io.on('connect', (socket) => {
+    console.log('Socket Connected', socket.id);
+
+    socket.on('message', ({ message }) => {
         console.log('message', message);
         io.emit('newMessage', { message });
     });
 
-    socket.once('disconnect', () => {
+    io.on('addUser', (userId) => {
+        addUser(userId, socket.id);
+    });
+
+    socket.on('disconnect', () => {
         console.log('User disconnected');
     });
 });
