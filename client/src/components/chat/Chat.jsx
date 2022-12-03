@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { io } from 'socket.io-client';
 import moment from 'moment';
 import { AiFillMessage, AiOutlineSend } from 'react-icons/ai';
 import { MdLogout } from 'react-icons/md';
@@ -22,21 +23,28 @@ const Chat = () => {
   const { user } = useSelector(store => store.auth);
   const users = useSelector(store => store.usersInfos);
   const { messagesData, isMessageLoading } = useSelector(store => store.messagesReducer);
+  const socket = useRef(io('ws://localhost:5000', { transports: ["websocket"] }));
 
   const [loadChat, setLoadChat] = useState({
-    expediteur: user.id,
+    expediteur: user.id ? user.id : null,
     destinateurId: null,
     destinateurUsername: null,
     isOpened: false
   });
   const messageInputField = useRef(null);
+  const scrollRef = useRef(null);
+  const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchUsers(user.token));
     if (user === null) {
       navigate('/login');
     }
+    dispatch(fetchUsers(user.token));
   }, []);
+
+  useEffect(() => {
+    socket.current.emit('addUser', user.id);
+  }, [user]);
 
   const selectUser = (destinateurId, destinateurUsername) => {
     setLoadChat({
@@ -45,15 +53,20 @@ const Chat = () => {
       destinateurUsername
     });
     dispatch(fetchUsersMessages({ expediteur: user.id, destinateurId, destinateur: destinateurId }));
-    // resetInput();
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth', to: scrollRef.current.height });
+    // scrollRef.current.style.overflowY = 'hidden';
+    resetInput();
   }
 
   const resetInput = () => {
-    messageInputField.current.value = null;
+    if (messageInputField.current !== null) {
+      messageInputField.current.value = null;
+    }
   }
 
   const envoieMessage = (exped, dest) => {
     let messageContent = messageInputField.current.value;
+    socket.emit('message', { message: messageContent });
 
     dispatch(sendMessage({
       expediteur: exped,
@@ -61,6 +74,14 @@ const Chat = () => {
       messageContent
     }));
     resetInput();
+  }
+
+  const uploadImage = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setUserImage(reader.result);
+    }
   }
 
   const onLogOut = () => {
@@ -139,26 +160,18 @@ const Chat = () => {
                 </div>
               </section>
 
-              <section className='chat-section'>
-                {isMessageLoading ? (
-                  <>
-                    <MessageLoader />
-                  </>
-                ) :
+              <section className='chat-section' ref={scrollRef}>
+                {
                   (
                     <>
-                      {messagesData.map((message, index) => {
-                        if (message?.expediteur || message?.destinateur) {
-                          return (
-                            <div key={index} className={user.id === message?.expediteur._id ? 'message-container' : 'message-container message-right'}>
-                              <div className={user.id === message?.expediteur._id ? 'message-box message-box-left' : 'message-box message-box-right'}>
-                                <p>{message?.messageContent}</p>
-                              </div>
-                              <p>{moment(message?.createdAt).format()}</p>
-                            </div>
-                          )
-                        }
-                      }
+                      {messagesData.map((message, index) => (
+                        <div key={index} className={(user.id === message?.expediteur._id || user.id === message?.expediteur) ? 'message-container message-right' : 'message-container'}>
+                          <div className={(user.id === message?.expediteur._id || user.id === message?.expediteur) ? 'message-box message-box-right' : 'message-box message-box-left'}>
+                            <p>{message?.messageContent}</p>
+                          </div>
+                          <p>{moment(message?.createdAt).fromNow()}</p>
+                        </div>
+                      )
                       )}
                     </>
                   )}
