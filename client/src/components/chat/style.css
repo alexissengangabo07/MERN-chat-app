@@ -25,6 +25,7 @@
     height: 70px;
     width: 70px;
     border-radius: 50%;
+    cursor: pointer;
 }
 
 .user-inbox-img {
@@ -50,6 +51,15 @@
 .message-icon {
     margin-top: 50px;
     width: 100%;
+    cursor: pointer;
+}
+
+.users-icon {
+    width: 100%;
+    cursor: pointer;
+}
+
+.menu-active {
     border-right: 4px solid yellow;
 }
 
@@ -155,10 +165,16 @@
     border-bottom: 1px solid rgb(191, 190, 190);
 }
 
-.active-icon {
+.active-img {
     position: absolute;
     bottom: 0;
     right: -5px;
+}
+
+.active-icon {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
 }
 
 .chat-footer {
@@ -280,8 +296,8 @@
     cursor: pointer;
 }
 
-.logout-icon:hover > .inner-logout-icon {
-        color: yellow !important;
+.logout-icon:hover>.inner-logout-icon {
+    color: yellow !important;
 }
 
 .fixed-title {

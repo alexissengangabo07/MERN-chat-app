@@ -37,30 +37,43 @@ app.use(morgan(':method :url :status :response-time ms'));
 app.use('/users', userRouter);
 app.use('/messages', messageRouter);
 
-let users = [{}];
+let users = [];
 
 const addUser = (userId, socketId) => {
     !users.some(usr => usr.userId === userId) &&
         users.push({ userId, socketId });
 
-    console.log('Socket add user ' ,users);
+    console.log('Socket add user ', users);
+}
+
+const removeUser = (socketId) => {
+    users = users.filter(user => user.socketId !== socketId);
+    console.log("Remove user ", users);
+}
+
+const getUser = (userId) => {
+    return users.find(user => user.userId === userId);
 }
 
 // Connect socket and socket manups
 io.on('connect', (socket) => {
     console.log('Socket Connected', socket.id);
 
-    socket.on('message', ({ message }) => {
-        console.log('message', message);
-        io.emit('newMessage', { message });
+    socket.on('addUser', (userId) => {
+        addUser(userId, socket.id);
+        io.emit('getUsers', users);
     });
 
-    io.on('addUser', (userId) => {
-        addUser(userId, socket.id);
-    });
+    socket.on('sendMessage', ({ expediteurId, destinateurId, messageContent }) => {
+        const userReceiver = getUser(destinateurId);
+
+        io.to(userReceiver?.socketId).emit('getMessage', { expediteurId, destinateurId, messageContent });
+    })
 
     socket.on('disconnect', () => {
         console.log('User disconnected');
+        removeUser(socket.id);
+        io.emit('getUsers', users);
     });
 });
 

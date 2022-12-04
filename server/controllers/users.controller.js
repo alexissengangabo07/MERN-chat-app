@@ -46,6 +46,7 @@ export const insertUserController = async (req, res) => {
 export const userLoginController = async (req, res) => {
     const { username, password } = req.body;
     const user = await userModel.findOne({ username });
+    
 
     if (user && (await bcrypt.compare(password, user.password))) {
         res.status(201).json({
@@ -57,7 +58,7 @@ export const userLoginController = async (req, res) => {
         });
     }
     else {
-        res.status(404).json({ message: null })
+        res.status(400).json(null);
     }
 }
 
