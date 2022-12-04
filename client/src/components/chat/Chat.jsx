@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { io } from 'socket.io-client';
 import moment from 'moment';
+import ReactTooltip from 'react-tooltip';
 import { AiFillMessage, AiOutlineSend } from 'react-icons/ai';
 import { MdLogout } from 'react-icons/md';
 import { FiSearch, FiCamera } from 'react-icons/fi';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { GoPrimitiveDot } from 'react-icons/go';
+import { FaUsers } from 'react-icons/fa';
 import { logOut, reset } from '../../feature/auth.slice';
 import { fetchUsers } from '../../feature/users.slice';
 import { fetchUsersMessages, sendMessage } from '../../feature/messages.slice';
@@ -23,10 +25,10 @@ const Chat = () => {
   const { user } = useSelector(store => store.auth);
   const users = useSelector(store => store.usersInfos);
   const { messagesData, isMessageLoading } = useSelector(store => store.messagesReducer);
-  const socket = useRef(io('ws://localhost:5000', { transports: ["websocket"] }));
+  const socket = useRef();
 
   const [loadChat, setLoadChat] = useState({
-    expediteur: user.id ? user.id : null,
+    expediteur: user?.id ? user?.id : null,
     destinateurId: null,
     destinateurUsername: null,
     isOpened: false
@@ -36,15 +38,25 @@ const Chat = () => {
   const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
+    socket.current = io('ws://localhost:5000', { transports: ["websocket"] });
+    socket.current.on('getMessage', (message) => {
+      dispatch(fetchUsersMessages({
+        expediteur: message.expediteurId,
+        destinateur: message.destinateurId
+      }));
+      console.log('ok');
+    })
+  }, [])
+
+  useEffect(() => {
     if (user === null) {
       navigate('/login');
     }
-    dispatch(fetchUsers(user.token));
-  }, []);
-
-  useEffect(() => {
-    socket.current.emit('addUser', user.id);
-  }, [user]);
+    else {
+      dispatch(fetchUsers(user?.token));
+      socket.current.emit('addUser', user?.id);
+    }
+  }, [dispatch, navigate, user]);
 
   const selectUser = (destinateurId, destinateurUsername) => {
     setLoadChat({
@@ -66,7 +78,12 @@ const Chat = () => {
 
   const envoieMessage = (exped, dest) => {
     let messageContent = messageInputField.current.value;
-    socket.emit('message', { message: messageContent });
+
+    socket.current.emit('sendMessage', {
+      expediteurId: exped,
+      destinateurId: dest,
+      messageContent
+    })
 
     dispatch(sendMessage({
       expediteur: exped,
@@ -87,6 +104,7 @@ const Chat = () => {
   const onLogOut = () => {
     dispatch(logOut());
     dispatch(reset());
+    navigate('/login');
   }
 
   if (users.isLoading) {
@@ -97,14 +115,18 @@ const Chat = () => {
 
   return (
     <>
+      <ReactTooltip />
       <main className='home-container'>
         {/* <button onClick={notify}>Notify!</button> */}
         <aside className='sidebar'>
           <div className='connected-user-img-container'>
-            <img alt="user-img" src={Image} className='connected-user-img' />
+            <img alt="user-img" src={Image} className='connected-user-img' data-tip={`Hi, ${user?.username} !`} data-place="right" data-effect='solid'/>
           </div>
-          <div className='message-icon'>
+          <div className='message-icon menu-active'>
             <AiFillMessage size={40} color='white' />
+          </div>
+          <div className='users-icon'>
+            <FaUsers size={40} color='white' />
           </div>
           <div className='logout-icon' onClick={onLogOut}>
             <MdLogout size={40} color='white' className='inner-logout-icon' />
@@ -126,7 +148,7 @@ const Chat = () => {
             </div>
             <div className='user-list'>
               {users.data.map((data, index) => {
-                if (data._id !== user.id) {
+                if (data._id !== user?.id) {
                   return (
                     <div className='user-infos' key={index} onClick={() => selectUser(data._id, data.username)}>
                       <div>
@@ -169,7 +191,7 @@ const Chat = () => {
                           <div className={(user.id === message?.expediteur._id || user.id === message?.expediteur) ? 'message-box message-box-right' : 'message-box message-box-left'}>
                             <p>{message?.messageContent}</p>
                           </div>
-                          <p>{moment(message?.createdAt).fromNow()}</p>
+                          <p>{moment(message?.createdAt).locale('fr').fromNow()}</p>
                         </div>
                       )
                       )}

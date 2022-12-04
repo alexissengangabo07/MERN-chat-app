@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logIn } from '../../feature/auth.slice';
@@ -8,28 +8,26 @@ import './style.css';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const emailField = useRef(null);
-  const passwordField = useRef(null);
+  const [emailField, setEmailField] = useState('');
+  const [passwordField, setpasswordField] = useState('');
 
-  const { isError, user, isSuccess, isLoading, message } = useSelector(store => store.auth);
+  const { isError, user, isSuccess, isLoading } = useSelector(store => store.auth);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isError) {
-      ToastNotifyError(message);
+      ToastNotifyError('Mot de passe incorrect');
     }
     if (isSuccess || user !== null) {
       navigate('/chat');
     }
-  });
+  }, [user, isError, navigate, isSuccess]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const email = emailField.current.value.trim();
-    const password = passwordField.current.value.trim();
 
-    dispatch(logIn({ username: email, password }));
+    dispatch(logIn({ username: emailField, password: passwordField }));
   }
 
   if (isLoading) {
@@ -57,11 +55,11 @@ const Login = () => {
         <form autoComplete='off' onSubmit={e => handleSubmit(e)}>
           <div className='form-group'>
             <label htmlFor="email">Email or Username</label>
-            <input type="text" ref={emailField} placeholder='Enter your email or username' className='input-field' id='email' name='email' />
+            <input type="text" value={emailField} onChange={e => setEmailField(e.target.value)} placeholder='Enter your email or username' className='input-field' id='email' name='email' />
           </div>
           <div className='form-group'>
             <label htmlFor="password">Password</label>
-            <input type="password" ref={passwordField} placeholder='Enter your password' className='input-field' id='password' name='password' autoComplete='off' required />
+            <input type="password" value={passwordField} onChange={e => setpasswordField(e.target.value)} placeholder='Enter your password' className='input-field' id='password' name='password' autoComplete='off' required />
           </div>
           <div className='form-group'>
             <input type="submit" value="Login" className='btn-signup' id='btn-signup' name='btn-signup' required />
