@@ -132,11 +132,11 @@
     gap: 10px;
     cursor: pointer;
     padding: 5px 5px 0 5px;
-    transition: all .3s ease;
+    transition: all 2s ease;
 }
 
 .user-infos:hover {
-    background-color: rgb(234, 234, 234);
+    background-color: rgb(228, 225, 225);
 }
 
 .user-infos:active {
@@ -233,6 +233,7 @@
 .message-container {
     margin-bottom: 10px;
     position: relative;
+    animation: fadeInAnimation ease 1s;
 }
 
 .message-left {

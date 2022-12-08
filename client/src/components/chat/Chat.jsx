@@ -38,7 +38,7 @@ const Chat = () => {
   const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
-    socket.current = io('ws://easy-chat-api.onrender.com', { transports: ["websocket"] });
+    socket.current = io('ws://localhost:5000', { transports: ["websocket"] });
     socket.current.on('getMessage', (message) => {
       dispatch(fetchUsersMessages({
         expediteur: message.expediteurId,
@@ -129,7 +129,7 @@ const Chat = () => {
             <FaUsers size={40} color='white' />
           </div>
           <div className='logout-icon' onClick={onLogOut}>
-            <MdLogout size={40} color='white' className='inner-logout-icon' />
+            <MdLogout size={40} color='white' className='inner-logout-icon' data-tip={`Logout`} data-place="top" data-effect='solid'/>
           </div>
         </aside>
         <article className='column-center'>
