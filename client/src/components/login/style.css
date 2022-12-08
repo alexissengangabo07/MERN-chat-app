@@ -1,75 +1,9 @@
-/*.container {
-    display: flex;
-    min-height: 100vh;
+.right-login {
+    margin-top: 30px;
 }
 
-.left-side {
-    flex-basis: 50%;
-    flex-grow: 1;
-    flex-shrink: 1;
-    background-image: url('./dragon-scales.svg');
+@media screen and (max-width: 800px) {
+    .right-login img {
+        margin-bottom: 30px;
+    }
 }
-
-.right-side {
-    flex-basis: 50%;
-    flex-grow: 1;
-    flex-shrink: 1;
-    padding: 0 35px;
-}
-
-.text-container {
-    color: #fff;
-    text-align: center;
-    margin-top: 40vh;
-    padding: 0 80px;
-}
-
-.header {
-    margin-bottom: 20px;
-}
-
-.input-field {
-    width: 100%;
-    height: 40px;
-    outline-color: #8400cb6c;
-    border: 1px solid rgb(165, 165, 165);
-    border-radius: 4px;
-    padding-left: 5px;
-}
-
-#btn-signup {
-    margin-top: 20px;
-    width: 100%;
-    background-color: #8300cb;
-    color: #fff;
-    font-size: large;
-    border-radius: 4px;
-    outline: none;
-    border: none;
-    padding: 10px;
-    transition: all 1s ease;
-    cursor: pointer;
-}
-
-#btn-signup:hover {
-    background-color: #600193;
-}
-
-.form-group {
-    margin: 10px 0;
-}
-
-label {
-    color: rgb(111, 111, 111);
-}
-
-.head-section {
-    text-align: center;
-    margin-top: 5px;
-    margin-bottom: 30px;
-}
-
-.text {
-    color: gray;
-}
-*/

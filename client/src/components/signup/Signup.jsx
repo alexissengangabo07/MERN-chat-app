@@ -66,9 +66,9 @@ const Signup = () => {
       <div className='right-side'>
         <div className='head-section'>
           <img src="./assets/images/chatapp-logo.png" alt='logo' width={90} />
-          <h2>Create an account</h2>
+          <h3>Create an account</h3>
           <p className='text'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo nam architecto est facere earum vero, autem suscipit illo nesciunt inventore aliquam praesentium impedit molestiae officia quaerat modi maxime soluta at?
+            Quo nam architecto est facere earum vero, autem suscipit illo nesciunt inventore aliquam praesentium impedit molestiae officia quaerat modi maxime soluta at?
           </p>
         </div>
         <form autoComplete='off' onSubmit={e => { e.preventDefault(); handleSubmit() }}>
