@@ -38,9 +38,9 @@ const Login = () => {
     <div className='container'>
       <div className='left-side'>
         <div className='text-container'>
-          <h2 className='header'>Real Time Chat App</h2>
+          <h2 className='header'>Easy Chat</h2>
           <p>
-            Welcome, you want to communicate with other people around the world, Signup to have an access to our platform
+            Welcome to Easy Chat, you want to communicate with other people around the world, Signup to have an access to our platform
           </p>
         </div>
       </div>
