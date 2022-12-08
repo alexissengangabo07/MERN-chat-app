@@ -44,12 +44,11 @@ const Login = () => {
           </p>
         </div>
       </div>
-      <div className='right-side'>
+      <div className='right-side right-login'>
         <div className='head-section'>
-          <img src="./assets/images/chatapp-logo.png" alt='logo' width={90} />
-          <h2>Login with your email</h2>
+          <img src="./assets/images/chatapp-logo.png" alt='logo' width={130} />
           <p className='text'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo nam architecto est facere earum vero, autem suscipit illo nesciunt inventore aliquam praesentium impedit molestiae officia quaerat modi maxime soluta at?
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. molestiae officia quaerat modi maxime soluta at?
           </p>
         </div>
         <form autoComplete='off' onSubmit={e => handleSubmit(e)}>
@@ -59,7 +58,7 @@ const Login = () => {
           </div>
           <div className='form-group'>
             <label htmlFor="password">Password</label>
-            <input type="password" value={passwordField} onChange={e => setpasswordField(e.target.value)} placeholder='Enter your password' className='input-field' id='password' name='password' autoComplete='off' required />
+            <input type="password" value={passwordField} onChange={e => setpasswordField(e.target.value)} placeholder='Enter your password' className='input-field' id='password' name='password' autoComplete='off' />
           </div>
           <div className='form-group'>
             <input type="submit" value="Login" className='btn-signup' id='btn-signup' name='btn-signup' required />
