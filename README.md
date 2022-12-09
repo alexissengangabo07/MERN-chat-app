@@ -1,4 +1,4 @@
-# Realtime chat app(easy chat)
+# Realtime chat app(easyChat)
 A realtie chat application built using React and NodeJS/express
 
 ## Features

@@ -3,9 +3,6 @@
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     background-color: lightgray;
-    height: 100vh;
-    max-height: 100vh;
-    padding: 20px;
     display: flex;
     gap: 30px;
     position: relative;
@@ -22,8 +19,6 @@
 }
 
 .connected-user-img {
-    height: 70px;
-    width: 70px;
     border-radius: 50%;
     cursor: pointer;
 }
@@ -35,32 +30,16 @@
 }
 
 .sidebar {
-    flex-basis: 10%;
     background-color: #8300cb;
-    border-radius: 10px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.sidebar>div {
-    padding: 16px;
 }
 
 .message-icon {
-    margin-top: 50px;
-    width: 100%;
     cursor: pointer;
 }
 
 .users-icon {
-    width: 100%;
     cursor: pointer;
-}
-
-.menu-active {
-    border-right: 4px solid yellow;
 }
 
 .logout-icon {
@@ -306,4 +285,68 @@
     top: 0;
     background-color: #fff;
     padding: 10px 0;
+}
+
+@media screen and (max-width: 800px) {
+    .home-container {
+        flex-direction: column;
+        padding: 5px;
+    }
+
+    .sidebar {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+    }
+
+    .menu-active {
+        margin-top: 30px;
+        border-bottom: 4px solid yellow;
+    }
+
+    .logout-icon {
+        display: none;
+    }
+    .connected-user-img {
+        height: 50px;
+        width: 50px;
+    }
+    .sidebar>div {
+        padding: 0 16px;
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .home-container {
+        height: 100vh;
+        max-height: 100vh;
+        padding: 20px;
+    }
+
+    .sidebar {
+        flex-basis: 10%;
+        border-radius: 10px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .menu-active {
+        border-right: 4px solid yellow;
+    }
+
+    .message-icon {
+        margin-top: 50px;
+    }
+
+    .connected-user-img {
+        height: 70px;
+        width: 70px;
+    }
+    .sidebar>div {
+        padding: 16px;
+        width: 100%;
+    }
 }
