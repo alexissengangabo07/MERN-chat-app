@@ -1,5 +1,7 @@
 # Realtime chat app(easyChat)
-A realtie chat application built using React and NodeJS/express
+This application built using Node.js, Express, Socket.io, Mongoose, RESTful Web Service.
+
+<img src="./chat-app-screenshot.png">
 
 ## Features
 
