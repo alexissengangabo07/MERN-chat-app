@@ -66,9 +66,9 @@ io.on('connect', (socket) => {
 
     socket.on('sendMessage', ({ expediteurId, destinateurId, messageContent }) => {
         const userReceiver = getUser(destinateurId);
-
+        
         io.to(userReceiver?.socketId).emit('getMessage', { expediteurId, destinateurId, messageContent });
-    })
+    });
 
     socket.on('disconnect', () => {
         console.log('User disconnected');

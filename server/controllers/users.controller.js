@@ -46,10 +46,10 @@ export const insertUserController = async (req, res) => {
 export const userLoginController = async (req, res) => {
     const { username, password } = req.body;
     const user = await userModel.findOne({ username });
-    
+
 
     if (user && (await bcrypt.compare(password, user.password))) {
-        res.status(201).json({
+        res.status(200).json({
             id: user._id,
             email: user.email,
             username: user.username,
@@ -58,7 +58,7 @@ export const userLoginController = async (req, res) => {
         });
     }
     else {
-        res.status(400).json(null);
+        res.status(400).json({ message: 'Invalid username or password !' });
     }
 }
 
@@ -81,7 +81,7 @@ export const logOutController = (req, res) => {
         req.logout()
         res.status(200).json({ msg: 'logging out' })
     } else {
-        res.status(200).json({ msg: 'no user to log out' })
+        res.status(400).json({ msg: 'no user to log out' })
     }
     // res.redirect('/login');
 }

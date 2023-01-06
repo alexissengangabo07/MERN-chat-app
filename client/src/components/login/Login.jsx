@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logIn } from '../../feature/auth.slice';
 import Loader from '../loader/Loader';
-import { ToastNotifyError } from '../signup/toastMessages';
 import './style.css';
 
 const Login = () => {
@@ -11,18 +10,15 @@ const Login = () => {
   const [emailField, setEmailField] = useState('');
   const [passwordField, setpasswordField] = useState('');
 
-  const { isError, user, isSuccess, isLoading } = useSelector(store => store.auth);
+  const { isError, user, isSuccess, isLoading, message } = useSelector(store => store.auth);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isError) {
-      ToastNotifyError('Mot de passe incorrect');
-    }
     if (isSuccess || user !== null) {
       navigate('/chat');
     }
-  }, [user, isError, navigate, isSuccess]);
+  }, [user, isError, navigate, isSuccess, message]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

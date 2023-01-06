@@ -16,7 +16,6 @@ import { fetchUsersMessages, sendMessage } from '../../feature/messages.slice';
 import Image from './default_avatar.jpg';
 import './style.css';
 import Loader from '../loader/Loader';
-import MessageLoader from './messageLoader/MessageLoader';
 
 const Chat = () => {
   const dispatch = useDispatch();
@@ -24,7 +23,7 @@ const Chat = () => {
 
   const { user } = useSelector(store => store.auth);
   const users = useSelector(store => store.usersInfos);
-  const { messagesData, isMessageLoading } = useSelector(store => store.messagesReducer);
+  const { messagesData } = useSelector(store => store.messagesReducer);
   const socket = useRef();
 
   const [loadChat, setLoadChat] = useState({
@@ -35,18 +34,17 @@ const Chat = () => {
   });
   const messageInputField = useRef(null);
   const scrollRef = useRef(null);
-  const [userImage, setUserImage] = useState(null);
+  // const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
-    socket.current = io('ws://localhost:5000', { transports: ["websocket"] });
+    socket.current = io('https://easy-chat-api.onrender.com', { transports: ["websocket"] });
     socket.current.on('getMessage', (message) => {
       dispatch(fetchUsersMessages({
         expediteur: message.expediteurId,
         destinateur: message.destinateurId
       }));
-      console.log('ok');
     })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (user === null) {
@@ -93,13 +91,13 @@ const Chat = () => {
     resetInput();
   }
 
-  const uploadImage = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setUserImage(reader.result);
-    }
-  }
+  // const uploadImage = (file) => {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     setUserImage(reader.result);
+  //   }
+  // }
 
   const onLogOut = () => {
     dispatch(logOut());
@@ -120,7 +118,7 @@ const Chat = () => {
         {/* <button onClick={notify}>Notify!</button> */}
         <aside className='sidebar'>
           <div className='connected-user-img-container'>
-            <img alt="user-img" src={Image} className='connected-user-img' data-tip={`Hi, ${user?.username} !`} data-place="right" data-effect='solid'/>
+            <img alt="user-img" src={Image} className='connected-user-img' data-tip={`Hi, ${user?.username} !`} data-place="right" data-effect='solid' />
           </div>
           <div className='message-icon menu-active'>
             <AiFillMessage size={40} color='white' />
@@ -129,7 +127,7 @@ const Chat = () => {
             <FaUsers size={40} color='white' />
           </div>
           <div className='logout-icon' onClick={onLogOut}>
-            <MdLogout size={40} color='white' className='inner-logout-icon' data-tip={`Logout`} data-place="top" data-effect='solid'/>
+            <MdLogout size={40} color='white' className='inner-logout-icon' data-tip={`Logout`} data-place="top" data-effect='solid' />
           </div>
         </aside>
         <article className='column-center'>
@@ -147,8 +145,9 @@ const Chat = () => {
               <h4>Recents</h4>
             </div>
             <div className='user-list'>
-              {users.data.map((data, index) => {
-                if (data._id !== user?.id) {
+              {users.data
+              .filter(data => data._id !== user?.id)
+              .map((data, index) => {
                   return (
                     <div className='user-infos' key={index} onClick={() => selectUser(data._id, data.username)}>
                       <div>
@@ -161,7 +160,6 @@ const Chat = () => {
                     </div>
                   );
                 }
-              }
               )}
             </div>
           </div>
