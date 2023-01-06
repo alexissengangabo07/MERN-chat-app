@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:5000/messages/';
+const url = 'https://easy-chat-api.onrender.com/messages/';
 
 export const fetchMessages = (expediteur, destinateur) => axios.get(url, {
     params: {

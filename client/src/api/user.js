@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:5000/users/';
+const url = 'https://easy-chat-api.onrender.com/users/';
 
 export const fetchUsers = (token) => axios.get(url + 'all/', {
     headers: {

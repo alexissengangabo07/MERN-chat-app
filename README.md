@@ -29,7 +29,7 @@ Start the Application
      <li><pre>nodemon index.js</pre>
      and
      <pre>npm start</pre></li>
-  Application runs from localhost:3000 and backend run at localhost:5000.
+Application runs from localhost:3000 and backend run at localhost:5000.
 ----------------
 ## Environments variables
 
