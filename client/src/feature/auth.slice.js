@@ -87,6 +87,7 @@ export const authSlice = createSlice({
             state.isSuccess = false;
             state.message = action.payload;
             state.user = null;
+            console.log(state.message)
             toast.error(state.message, {
                 position: "top-right",
                 autoClose: 5000
