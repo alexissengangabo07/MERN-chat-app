@@ -42,10 +42,13 @@ const Signup = () => {
     if (!emailTest) {
       ToastNotifyError('Entrer une adresse mail correct !');
     }
+    if (password.trim() === '') {
+      ToastNotifyError('Entrer le mot de passe !');
+    }
     if (password !== passwordConfirm) {
       ToastNotifyError('Le mot de passe et la confirmation doivent etre similaire !');
     }
-    if (usernameTest && emailTest && password === passwordConfirm) {
+    if (usernameTest && emailTest && password.trim() !== '' && password === passwordConfirm) {
       dispatch(saveUser({ username, email, password: passwordConfirm }));
     }
   }
