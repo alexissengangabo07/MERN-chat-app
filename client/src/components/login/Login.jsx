@@ -22,7 +22,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('ok');
 
     dispatch(logIn({ username: emailField, password: passwordField }));
   }
