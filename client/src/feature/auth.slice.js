@@ -76,6 +76,10 @@ export const authSlice = createSlice({
             state.isSuccess = true;
             state.user = payload;
             state.isError = false;
+            toast.success('connection success', {
+                position: "top-left",
+                autoClose: 2000
+            });
         });
         builder.addCase(logIn.rejected, (state, action) => {
             state.isLoading = false;
@@ -85,7 +89,7 @@ export const authSlice = createSlice({
             state.user = null;
             toast.error(state.message, {
                 position: "top-right",
-                autoClose: 8000
+                autoClose: 5000
             });
         });
         builder.addCase(logOut.fulfilled, (state, action) => {

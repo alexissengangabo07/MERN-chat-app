@@ -39,6 +39,7 @@ const Chat = () => {
   useEffect(() => {
     socket.current = io('https://easy-chat-api.onrender.com', { transports: ["websocket"] });
     socket.current.on('getMessage', (message) => {
+      alert('got message')
       dispatch(fetchUsersMessages({
         expediteur: message.expediteurId,
         destinateur: message.destinateurId
