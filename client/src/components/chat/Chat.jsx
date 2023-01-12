@@ -37,7 +37,7 @@ const Chat = () => {
   // const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
-    socket.current = io('https://easy-chat-api.onrender.com', { transports: ["websocket"] });
+    socket.current = io('https://easy-chat-api.onrender.com/', { transports: ["websocket"] });
     socket.current.on('getMessage', (message) => {
       alert('got message')
       dispatch(fetchUsersMessages({
